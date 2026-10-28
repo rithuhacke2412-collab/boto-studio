@@ -13,6 +13,8 @@ const approvalModal = document.getElementById('approval-modal');
 const warningList = document.getElementById('warning-list');
 const cancelApprovalButton = document.getElementById('cancel-approval');
 const approveScriptButton = document.getElementById('approve-script');
+const logoImage = document.querySelector('.logo-image');
+const logoPlaceholder = document.querySelector('.logo-placeholder');
 
 const state = {
   theme: 'dark',
@@ -23,6 +25,15 @@ const state = {
   scriptSource: `# Copy Documents to the backup drive\n$src = "$env:USERPROFILE\\Documents"\n$dst = "D:\\Backup\\Documents"\nrobocopy $src $dst /MIR /R:1 /W:1\nWrite-Output "Backup finished"`,
   approvedScripts: {},
 };
+
+function bindLogoFallback() {
+  if (!logoImage || !logoPlaceholder) return;
+  logoImage.addEventListener('error', () => {
+    logoImage.style.display = 'none';
+    logoPlaceholder.hidden = false;
+    logoPlaceholder.style.display = 'block';
+  });
+}
 
 function loadState() {
   const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
@@ -175,6 +186,7 @@ function hydrateInitialValues() {
   setTab(state.currentTab || 'upload');
 }
 
+bindLogoFallback();
 loadState();
 bindEvents();
 hydrateInitialValues();
