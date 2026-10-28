@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Boto Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <div id="app" class="app-shell dark">
+      <aside class="sidebar">
+        <div class="logo-plate">
+          <div class="logo-wordmark" aria-label="Boto Studio logo">
+            <span class="logo-boto">BOTO</span>
+            <span class="logo-red-dot" aria-hidden="true"></span>
+            <span class="logo-studio">STUDIO</span>
+          </div>
+          <div class="logo-tag">Automation</div>
+        </div>
+
+        <nav class="nav" aria-label="Main navigation">
+          <button class="nav-button active" data-view="upload" type="button">
+            <span class="nav-icon">↑</span>
+            <span>Upload</span>
+          </button>
+          <button class="nav-button" data-view="edit" type="button">
+            <span class="nav-icon">✎</span>
+            <span>Edit</span>
+          </button>
+          <button class="nav-button" data-view="run" type="button">
+            <span class="nav-icon">▷</span>
+            <span>Run</span>
+          </button>
+        </nav>
+
+        <div class="theme-switcher" role="tablist" aria-label="Theme switcher">
+          <button class="theme-button active" data-theme="dark" type="button">Dark</button>
+          <button class="theme-button" data-theme="light" type="button">Light</button>
+        </div>
+
+        <div class="status-box">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span>Scheduled</span>
+        </div>
+      </aside>
+
+      <main class="main-panel">
+        <section class="screen active" id="screen-upload">
+          <header class="screen-header">
+            <h1>Upload</h1>
+            <p>Paste your code, or point Boto to the file.</p>
+          </header>
+
+          <div class="upload-card">
+            <div class="field-row name-row">
+              <label for="script-name">Script name</label>
+              <input id="script-name" type="text" value="Nightly backup" maxlength="120" />
+            </div>
+
+            <div class="segmented" role="tablist" aria-label="Upload method">
+              <button class="segment active" data-mode="paste" type="button">Paste code</button>
+              <button class="segment" data-mode="file" type="button">File location</button>
+            </div>
+
+            <div class="editor-area">
+              <div class="code-panel" id="code-panel">
+                <pre id="script-preview" contenteditable="true" spellcheck="false" aria-label="Script editor">
+# Copy Documents to the backup drive
+$src = "$env:USERPROFILE\Documents"
+$dst = "D:\Backup\Documents"
+robocopy $src $dst /MIR /R:1 /W:1
+Write-Output "Backup finished"
+                </pre>
+              </div>
+            </div>
+
+            <div class="field-row language-row">
+              <label for="language">Language</label>
+              <div class="language-options" id="language-options" aria-label="Language selection">
+                <button class="lang-button active" data-language="PowerShell" type="button">PowerShell</button>
+                <button class="lang-button" data-language="Batch" type="button">Batch</button>
+                <button class="lang-button" data-language="Python" type="button">Python</button>
+              </div>
+              <div class="language-note">Python only works if it is installed on this PC.</div>
+            </div>
+
+            <div class="upload-actions">
+              <button type="button" class="primary-button" id="save-boto">Save and choose when</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="screen" id="screen-edit">
+          <header class="screen-header">
+            <h1>Edit</h1>
+            <p>Choose when the script runs.</p>
+          </header>
+          <div class="upload-card small-panel">
+            <div class="empty-state">
+              <p>This screen is available after the automation is created.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="screen" id="screen-run">
+          <header class="screen-header">
+            <h1>Run</h1>
+            <p>Run the script and examine the output.</p>
+          </header>
+          <div class="upload-card small-panel">
+            <div class="empty-state">
+              <p>The run engine is ready when an automation is approved.</p>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="approval-modal" class="modal hidden" aria-modal="true" role="dialog" aria-labelledby="approval-title">
+      <div class="modal-card">
+        <h2 id="approval-title">Approval required</h2>
+        <p class="small-copy">Boto runs code on your computer with your permissions. Review the script and warnings before approving.</p>
+        <div id="warning-list" class="warning-list"></div>
+        <div class="approval-actions">
+          <button type="button" class="secondary-button" id="cancel-approval">Cancel</button>
+          <button type="button" class="primary-button" id="approve-script">Approve</button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>
